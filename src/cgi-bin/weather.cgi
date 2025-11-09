@@ -4,13 +4,22 @@ use CGI;
 use strict;
 use warnings;
 
-# Global vars - legacy style
+# Global vars - legacy style (inconsistent naming)
 our $q = CGI->new;
 our $CITY;
 our $DEBUG = 1;
 our %weather_data;
+our $ORIGINAL_CITY;
+our $temp_val;  # inconsistent naming
+our $w_condition;  # abbreviated
+our $wCode;  # mixed case
 
-# Weather mapping - legacy style global
+# More globals - because why not?
+our $rnd_seed = time() ^ ($$ + ($$ << 15));
+our @temp_modifiers = (-15, -10, -5, 0, 5, 10, 15);
+our $base_temp_celsius = 10;
+
+# Weather mapping - legacy style global (poetic hash slice)
 our %WEATHER_MAP = (
     'sunny' => 100, 'cloudy' => 101, 'rainy' => 102, 'snowy' => 103,
     'stormy' => 104, 'foggy' => 105, 'windy' => 106, 'partly cloudy' => 107,
@@ -20,23 +29,16 @@ our %WEATHER_MAP = (
 );
 
 our @weather_conditions = keys %WEATHER_MAP;
-our ($temp, $condition, $weather_code);
 
 # Print header
 print $q->header('text/xml');
 
-# Get city param
-$CITY = $q->param('city') || '';
-our $ORIGINAL_CITY = $CITY;  # Store original for output
+# Get city param - poetic style
+($CITY = $q->param('city')) || &error_out("No city specified");
+$ORIGINAL_CITY = $CITY;  # Store original for output
 
-# Basic validation
-if (!$CITY) {
-    &error_out("No city specified");
-}
-
-# Clean city name (legacy style) - for processing only
-$CITY =~ s/[^a-zA-Z\s]//g;
-$CITY = lc($CITY);
+# Clean city name (legacy style) - poetic one-liner
+($CITY =~ s/[^a-zA-Z\s]//g, $CITY = lc($CITY));
 
 # Generate weather and output XML
 &generate_weather();
@@ -55,39 +57,41 @@ sub error_out {
 }
 
 sub generate_weather {
-    # Temperature around 10C with randomness - legacy style
-    srand();
-    my $base_temp = 10;
-    my $variation = int(rand(30)) - 15; # -15 to +15
-    my $fine_tune = (rand(10) - 5) / 2; # -2.5 to +2.5
-    $temp = $base_temp + $variation + $fine_tune;
-    $temp = sprintf("%.1f", $temp);
+    # Seed randomness - because we can
+    srand($rnd_seed);
     
-    # Pick random weather condition - fix array access
-    if ($CITY eq 'london') {
-        $condition = 'rainy';
-    } else {
-        my $idx = int(rand(scalar @weather_conditions));
-        $condition = $weather_conditions[$idx];
-    }
-    $weather_code = $WEATHER_MAP{$condition};
+    # Temperature generation - poetic style with ternary and array slice
+    my $variation = $temp_modifiers[int(rand(@temp_modifiers))];
+    my $fine_adjustment = (rand(10) - 5) / 2;  # legacy comment style
+    $temp_val = sprintf("%.1f", $base_temp_celsius + $variation + $fine_adjustment);
     
-    # Store in global hash - legacy pattern
+    # Weather selection - cryptic but functional
+    $w_condition = ($CITY eq 'london') ? 'rainy' : 
+                   $weather_conditions[int(rand(scalar @weather_conditions))];
+    
+    # Get code - hash lookup with legacy variable naming
+    $wCode = $WEATHER_MAP{$w_condition};
+    
+    # Populate global hash - because globals are fun
     %weather_data = (
         'location' => $ORIGINAL_CITY,
-        'temp' => $temp,
-        'condition' => $condition,
-        'code' => $weather_code
+        'temp' => $temp_val,
+        'condition' => $w_condition,
+        'code' => $wCode
     );
 }
 
 sub output_xml {
-    print qq{<?xml version="1.0"?>
+    # XML generation - legacy heredoc style
+    my $xml_response = <<"EOF";
+<?xml version="1.0"?>
 <weather>
   <location>$weather_data{'location'}</location>
   <temperature>$weather_data{'temp'}</temperature>
   <unit>Celsius</unit>
   <description>$weather_data{'condition'}</description>
   <code>$weather_data{'code'}</code>
-</weather>};
+</weather>
+EOF
+    print $xml_response;
 }

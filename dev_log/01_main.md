@@ -23,7 +23,7 @@ A weather API that accepts a city parameter and returns XML weather data. Built 
 
 ## Project Status
 ### Overall Completion
-40% - Weather algorithm and XML output complete
+80% - Legacy code patterns implemented
 
 ### Completed Features
 - CGI script structure with legacy patterns
@@ -34,15 +34,17 @@ A weather API that accepts a city parameter and returns XML weather data. Built 
 - XML response with location, temperature, unit, description, code
 - Special case: London always rainy
 - Original city name preservation in output
+- Authentic legacy Perl patterns (poetic constructs, inconsistent naming, global vars)
 
 ## Units Implemented
 ### Completed Units
 * **01**: Project Setup - Basic CGI framework with global vars and legacy patterns
 * **02**: Weather Algorithm - Randomized weather generation with comprehensive mapping
+* **04**: Legacy Code Patterns - "Poetic" Perl constructs and inconsistent naming
 
 ### Units In Progress
-#### 03. XML Response Generation
-**Status:** Complete (integrated with Unit 02)
+#### 05. Testing and Deployment
+**Status:** Ready to start
 
 ## Planned Units
 * **01**: Project Setup - Basic structure and CGI framework
