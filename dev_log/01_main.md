@@ -43,12 +43,12 @@ A weather API that accepts a city parameter and returns XML weather data. Built 
 * **04**: Legacy Code Patterns - "Poetic" Perl constructs and inconsistent naming
 
 ### Units In Progress
-#### 05. Testing and Deployment
-**Status:** Ready to start
+#### 05. Comment Removal
+**Status:** Ready to start - Strip all documentation for authentic legacy feel
 
 ## Planned Units
 * **01**: Project Setup - Basic structure and CGI framework
 * **02**: Weather Algorithm - Randomized weather generation logic
 * **03**: XML Response Generation - Legacy XML formatting
 * **04**: Legacy Code Patterns - Global vars and "poetic" Perl
-* **05**: Testing and Deployment - CGI deployment setup
+* **05**: Comment Removal - Strip documentation for authentic legacy feel
